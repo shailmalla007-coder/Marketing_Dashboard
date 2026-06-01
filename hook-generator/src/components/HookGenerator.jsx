@@ -70,6 +70,7 @@ export default function HookGenerator() {
     unique: ''
   })
   const [hooks, setHooks] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     const { id, value } = e.target
@@ -119,7 +120,7 @@ export default function HookGenerator() {
     }
   }
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!formData.topic || !formData.audience || !formData.unique) {
       if (!formData.topic) document.getElementById('topic').focus()
       else if (!formData.audience) document.getElementById('audience').focus()
@@ -127,14 +128,20 @@ export default function HookGenerator() {
       return
     }
 
-    const generatedHooks = Array.from({ length: 5 }, (_, index) => buildHook(index))
-    setHooks(generatedHooks)
+    setLoading(true)
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      const generatedHooks = Array.from({ length: 5 }, (_, index) => buildHook(index))
+      setHooks(generatedHooks)
+      setLoading(false)
+    }, 600)
   }
 
   return (
     <div className="container">
       <h1>Hook Generator</h1>
-      <p>Create scroll-stopping hooks built for Instagram, TikTok, and LinkedIn with authentic storytelling that resonates.</p>
+      <p>Create scroll-stopping hooks for Instagram, TikTok, and LinkedIn with authentic storytelling.</p>
 
       <div className="form-grid">
         <div className="form-group">
@@ -154,7 +161,7 @@ export default function HookGenerator() {
             id="audience"
             className="field"
             type="text"
-            placeholder="e.g. Young professionals who value quality moments"
+            placeholder="e.g. Young professionals seeking mindful moments"
             value={formData.audience}
             onChange={handleChange}
           />
@@ -182,11 +189,11 @@ export default function HookGenerator() {
             value={formData.trigger}
             onChange={handleChange}
           >
-            <option value="Curiosity">Curiosity (make them need to know more)</option>
+            <option value="Curiosity">Curiosity (make them need to know)</option>
             <option value="FOMO">FOMO (fear of missing out)</option>
-            <option value="Nostalgia">Nostalgia (childhood memory feeling)</option>
-            <option value="Controversy">Controversy (challenge a common belief)</option>
-            <option value="Surprise">Surprise (something unexpected)</option>
+            <option value="Nostalgia">Nostalgia (childhood feeling)</option>
+            <option value="Controversy">Controversy (challenge beliefs)</option>
+            <option value="Surprise">Surprise (unexpected twist)</option>
             <option value="Relatability">Relatability (this is so me)</option>
             <option value="Aspiration">Aspiration (who I want to be)</option>
           </select>
@@ -203,12 +210,22 @@ export default function HookGenerator() {
           />
         </div>
         <div className="button-row">
-          <button onClick={handleGenerate}>Generate Hooks</button>
+          <button onClick={handleGenerate} disabled={loading}>
+            {loading ? (
+              <span className="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            ) : (
+              'Generate Hooks'
+            )}
+          </button>
         </div>
       </div>
 
       <div className="output">
-        <h2>Generated Hooks</h2>
+        <h2>Your Hooks</h2>
         {hooks.length > 0 ? (
           <>
             <ul className="hooks">
@@ -221,15 +238,14 @@ export default function HookGenerator() {
           <ul className="hooks">
             <li className="hook-card">
               <span className="hook-label">Ready</span>
-              <p className="hook-text">Fill the form and click Generate Hooks to see five perfectly crafted hooks with word counts and copy buttons.</p>
+              <p className="hook-text">Fill in your details and generate perfectly crafted hooks for your content.</p>
               <div className="hook-meta">
-                <span>Each hook is tailored for maximum impact.</span>
-                <button disabled>Copy</button>
+                <span>Each hook is optimized for maximum engagement</span>
               </div>
             </li>
           </ul>
         )}
-        <p className="hint">Pro tip: Be specific with your audience and unique angle for the best results.</p>
+        <p className="hint">💡 Pro tip: Be specific with your audience and unique angle for better results</p>
       </div>
     </div>
   )

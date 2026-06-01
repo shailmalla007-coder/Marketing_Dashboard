@@ -4,9 +4,13 @@ export default function HookCard({ hook }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(hook.text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1200)
+    try {
+      await navigator.clipboard.writeText(hook.text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1200)
+    } catch (err) {
+      console.log('Copy failed:', err)
+    }
   }
 
   return (
@@ -14,9 +18,9 @@ export default function HookCard({ hook }) {
       <span className="hook-label">{hook.type}</span>
       <p className="hook-text">{hook.text}</p>
       <div className="hook-meta">
-        <span>Word count: {hook.words}</span>
-        <button onClick={handleCopy} className="copy-btn">
-          {copied ? 'Copied' : 'Copy'}
+        <span>📊 {hook.words} words</span>
+        <button onClick={handleCopy} className="copy-btn" title="Copy to clipboard">
+          {copied ? '✓ Copied' : '📋 Copy'}
         </button>
       </div>
     </li>
